@@ -33,20 +33,31 @@ data "aws_iam_policy_document" "policy" {
   version = "2012-10-17"
 
   statement {
-    sid = "InvokeAPI"
-    actions = ["execute-api:Invoke"]
+    sid = "TransferSFTPS3BucketAccessPolicy"
+    actions = [
+      "s3:DeleteObject",
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:DeleteObjectVersion",
+      "s3:GetObjectVersion",
+      "s3:GetObjectACL",
+      "s3:PutObjectACL",
+    ]
     effect = "Allow"
     resources = [
-      "${aws_api_gateway_stage.stage.execution_arn}"
+      "${aws_s3_bucket.bucket.arn}/*"
     ]
   }
 
   statement {
-    sid = "TransferCanReadThisApi"
-    actions = ["apigateway:GET"]
+    sid = "ListBucketPolicy"
+    actions = [
+      "s3:ListBucket",
+      "s3:GetBucketLocation"
+    ]
     effect = "Allow"
     resources = [
-      "*"
+      "${aws_s3_bucket.bucket.arn}"
     ]
   }
 }
