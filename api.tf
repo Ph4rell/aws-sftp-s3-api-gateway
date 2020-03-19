@@ -13,6 +13,11 @@ resource "aws_api_gateway_deployment" "deploy" {
     aws_api_gateway_integration.integration,
     aws_api_gateway_integration_response.integration_response,
   ]
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
 }
 
 resource "aws_api_gateway_stage" "stage" {
