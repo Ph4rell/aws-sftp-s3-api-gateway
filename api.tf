@@ -1,9 +1,13 @@
 resource "aws_api_gateway_rest_api" "api" {
-  name = "api-test"
+  name = var.api_name
 
   endpoint_configuration {
     types = ["REGIONAL"]
   }
+}
+
+resource "aws_cloudwatch_log_group" "API-log-group" {
+  name = var.api_name
 }
 
 resource "aws_api_gateway_deployment" "deploy" {
