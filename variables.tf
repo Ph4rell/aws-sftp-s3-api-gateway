@@ -1,0 +1,3 @@
+variable "mybucket" {
+    type = string
+}
