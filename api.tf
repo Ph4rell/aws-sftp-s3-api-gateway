@@ -8,6 +8,11 @@ resource "aws_api_gateway_rest_api" "api" {
 
 resource "aws_api_gateway_deployment" "deploy" {
   rest_api_id = aws_api_gateway_rest_api.api.id
+
+  depends_on = [
+    aws_api_gateway_integration.integration,
+    aws_api_gateway_integration_response.integration_response
+  ]
 }
 
 resource "aws_api_gateway_stage" "stage" {
@@ -16,24 +21,62 @@ resource "aws_api_gateway_stage" "stage" {
   deployment_id = aws_api_gateway_deployment.deploy.id
 }
 
-resource "aws_api_gateway_resource" "resource" {
+resource "aws_api_gateway_resource" "servers" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   parent_id   = aws_api_gateway_rest_api.api.root_resource_id
-  path_part   = "resource"
+  path_part   = "servers"
 }
-
+resource "aws_api_gateway_resource" "serverid" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  parent_id   = aws_api_gateway_resource.servers.id
+  path_part   = "{serverId}"
+}
+resource "aws_api_gateway_resource" "users" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  parent_id   = aws_api_gateway_resource.serverid.id
+  path_part   = "users"
+}
+resource "aws_api_gateway_resource" "username" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  parent_id   = aws_api_gateway_resource.users.id
+  path_part   = "{username}"
+}
+resource "aws_api_gateway_resource" "config" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  parent_id   = aws_api_gateway_resource.username.id
+  path_part   = "config"
+}
 resource "aws_api_gateway_method" "method" {
   rest_api_id   = aws_api_gateway_rest_api.api.id
-  resource_id   = aws_api_gateway_resource.resource.id
+  resource_id   = aws_api_gateway_resource.config.id
   http_method   = "GET"
-  authorization = "NONE"
+  authorization = "AWS_IAM"
+  request_parameters = {
+    "method.request.querystring.serverId" = true,
+    "method.request.querystring.username" = true,
+    "method.request.header.Password" = true
+  }
 }
 
 resource "aws_api_gateway_integration" "integration" {
   rest_api_id             = aws_api_gateway_rest_api.api.id
-  resource_id             = aws_api_gateway_resource.resource.id
+  resource_id             = aws_api_gateway_resource.config.id
   http_method             = aws_api_gateway_method.method.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.lambda.invoke_arn
+}
+
+resource "aws_api_gateway_integration_response" "integration_response" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.config.id
+  http_method = aws_api_gateway_method.method.http_method
+  status_code = aws_api_gateway_method_response.response_200.status_code
+}
+
+resource "aws_api_gateway_method_response" "response_200" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.config.id
+  http_method = aws_api_gateway_method.method.http_method
+  status_code = "200"
 }
