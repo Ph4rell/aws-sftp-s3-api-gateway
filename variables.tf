@@ -5,3 +5,7 @@ variable "mybucket" {
 variable "lambda_name" {
     type = string
 }
+
+variable "api_name" {
+    type = string
+}
