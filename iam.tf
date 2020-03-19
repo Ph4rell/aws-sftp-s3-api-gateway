@@ -54,7 +54,7 @@ data "aws_iam_policy_document" "transfer_IdP_document" {
     sid = "TransferCanVerifyReturnedUserRole"
     actions = ["iam:PassRole"]
     effect = "Allow"
-    resources = [""]
+    resources = [aws_iam_role.TransferSFTPS3AccessRole.arn]
   }
 }
 #############################
