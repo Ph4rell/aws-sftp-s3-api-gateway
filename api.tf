@@ -1,6 +1,5 @@
 resource "aws_api_gateway_rest_api" "api" {
-  name = var.api_name
-
+  name    = var.api_name
   endpoint_configuration {
     types = ["REGIONAL"]
   }
@@ -30,6 +29,9 @@ resource "aws_api_gateway_stage" "stage" {
   deployment_id = aws_api_gateway_deployment.deploy.id
 }
 
+#################
+# API RESOURCES
+################
 resource "aws_api_gateway_resource" "servers" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   parent_id   = aws_api_gateway_rest_api.api.root_resource_id
@@ -55,6 +57,9 @@ resource "aws_api_gateway_resource" "config" {
   parent_id   = aws_api_gateway_resource.username.id
   path_part   = "config"
 }
+############
+#API METHOD
+###########
 resource "aws_api_gateway_method" "get_method" {
   rest_api_id   = aws_api_gateway_rest_api.api.id
   resource_id   = aws_api_gateway_resource.config.id
@@ -67,6 +72,9 @@ resource "aws_api_gateway_method" "get_method" {
   }
 }
 
+################
+#API INTEGRATION
+################
 resource "aws_api_gateway_integration" "integration" {
   rest_api_id             = aws_api_gateway_rest_api.api.id
   resource_id             = aws_api_gateway_resource.config.id
@@ -76,6 +84,9 @@ resource "aws_api_gateway_integration" "integration" {
   uri                     = aws_lambda_function.lambda.invoke_arn
 }
 
+#########################
+#API INTEGRATION RESPONSE
+#########################
 resource "aws_api_gateway_integration_response" "integration_response" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   resource_id = aws_api_gateway_resource.config.id
@@ -83,6 +94,9 @@ resource "aws_api_gateway_integration_response" "integration_response" {
   status_code = "200"
 }
 
+#########################
+#API METHOD RESPONSE
+#########################
 resource "aws_api_gateway_method_response" "response_200" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   resource_id = aws_api_gateway_resource.config.id

@@ -1,16 +1,16 @@
 data "archive_file" "zip" {
-    type = "zip"
-    source_dir = "./app/"
-    output_path = "./lambda.zip"
+    type          = "zip"
+    source_dir    = "./app/"
+    output_path   = "./lambda.zip"
 }
 
 resource "aws_lambda_function" "lambda" {
-  filename      = "lambda.zip"
-  function_name = var.lambda_name
-  role          = aws_iam_role.lambda_role.arn
-  handler       = "lambda.lambda_handler"
-  runtime       = "python3.6"
-  source_code_hash = filebase64sha256("lambda.zip")
+  filename          = "lambda.zip"
+  function_name     = var.lambda_name
+  role              = aws_iam_role.lambda_role.arn
+  handler           = "lambda.lambda_handler"
+  runtime           = "python3.6"
+  source_code_hash  = filebase64sha256("lambda.zip")
 }
 
 resource "aws_lambda_permission" "lambda_permission" {
@@ -22,7 +22,7 @@ resource "aws_lambda_permission" "lambda_permission" {
 }
 
 resource "aws_iam_role" "lambda_role" {
-  name 		          = "LambdRole"
+  name 		            = "LambdRole"
   description         = "Lambda role"
   assume_role_policy  = data.aws_iam_policy_document.lambda_assume_role_policy.json
 }
@@ -43,6 +43,6 @@ data "aws_iam_policy_document" "lambda_assume_role_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "ManagedPolicy_attachment" {
-  role = aws_iam_role.lambda_role.id
-  policy_arn = data.aws_iam_policy.ManagedPolicy.arn
+  role        = aws_iam_role.lambda_role.id
+  policy_arn  = data.aws_iam_policy.ManagedPolicy.arn
 }
