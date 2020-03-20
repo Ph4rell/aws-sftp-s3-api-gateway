@@ -8,6 +8,10 @@ resource "aws_api_gateway_rest_api" "api" {
 resource "aws_cloudwatch_log_group" "API-log-group" {
   name = var.api_name
 }
+resource "aws_cloudwatch_log_stream" "API-log-stream" {
+  name           = "API-log-stream"
+  log_group_name = aws_cloudwatch_log_group.API-log-group.name
+}
 
 resource "aws_api_gateway_deployment" "deploy" {
   rest_api_id = aws_api_gateway_rest_api.api.id
@@ -82,6 +86,16 @@ resource "aws_api_gateway_integration" "integration" {
   integration_http_method = "POST"
   type                    = "AWS"
   uri                     = aws_lambda_function.lambda.invoke_arn
+
+  request_templates = {
+    "application/json" = <<EOF
+    {
+      "username": "$input.params('username')",
+      "password": "$util.escapeJavaScript($input.params('Password')).replaceAll("\\'","'")",
+      "serverId": "$input.params('serverId')"
+    }
+    EOF
+  }
 }
 
 #########################
