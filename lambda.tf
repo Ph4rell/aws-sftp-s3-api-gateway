@@ -1,7 +1,12 @@
 data "archive_file" "zip" {
-    type          = "zip"
-    source_dir    = "./app/"
-    output_path   = "./lambda.zip"
+  type          = "zip"
+  source_dir    = "./app/"
+  output_path   = "./lambda.zip"
+
+  depends_on = [
+    local_file.lambda
+  ]
+    
 }
 
 resource "aws_lambda_function" "lambda" {
