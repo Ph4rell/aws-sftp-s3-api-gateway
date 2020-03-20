@@ -9,3 +9,7 @@ variable "lambda_name" {
 variable "api_name" {
     type = string
 }
+
+variable "okta_domain" {
+    type = string
+}
