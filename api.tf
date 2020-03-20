@@ -70,8 +70,6 @@ resource "aws_api_gateway_method" "get_method" {
   http_method   = "GET"
   authorization = "AWS_IAM"
   request_parameters = {
-    # "method.request.querystring.ServerId" = true,
-    # "method.request.querystring.UserName" = true,
     "method.request.header.Password" = false
   }
 }
