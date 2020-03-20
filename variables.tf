@@ -13,3 +13,6 @@ variable "api_name" {
 variable "okta_domain" {
     type = string
 }
+variable "OktaAuthApiUri" {
+    type = string
+}

@@ -47,7 +47,7 @@ def auth_with_okta(user_name, password):
     credentials = {"username": user_name, "password": password}
 
     try:
-        res = requests.post(url="https://engie.okta-emea.com/api/v1/authn", data=json.dumps(credentials), headers=headers)
+        res = requests.post(url="${OktaAuthApiUri}", data=json.dumps(credentials), headers=headers)
         logger.info("Okta response: [{}]".format(res))
         return res.status_code
     except Exception as e:

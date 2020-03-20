@@ -9,6 +9,7 @@ data "template_file" "lambda" {
     mybucket = var.mybucket
     transfer_role_arn = aws_iam_role.TransferSFTPS3AccessRole.arn
     UserSigninDomain = var.okta_domain
+    OktaAuthApiUri = var.OktaAuthApiUri
   }
 }
 
