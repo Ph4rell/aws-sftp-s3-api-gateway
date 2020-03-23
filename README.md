@@ -4,7 +4,7 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
-| OktaAuthApiUri | Okta Authorization API URL (such as https://<YOUR-OKTA-ENDPOINT>/api/v1/authn) | `string` | n/a | yes |
+| OktaAuthApiUri | Okta Authorization API URL (such as https://**YOUR-OKTA-ENDPOINT**/api/v1/authn) | `string` | n/a | yes |
 | api\_name | Name of your API | `string` | n/a | yes |
 | lambda\_name | Name of the lambda | `string` | n/a | yes |
 | mybucket | Name of the bucket to create | `string` | n/a | yes |
