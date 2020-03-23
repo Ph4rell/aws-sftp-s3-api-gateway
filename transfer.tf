@@ -3,7 +3,7 @@ resource "aws_transfer_server" "server" {
   endpoint_type           = "PUBLIC"
   invocation_role         = aws_iam_role.transfer_IdP_role.arn
   url                     = aws_api_gateway_stage.stage.invoke_url
-  logging_role            = aws_iam_role.ApiGatewayLogsRole.arn
+  logging_role            = aws_iam_role.TransferSFTPS3AccessRole.arn
 
   depends_on = [
     aws_api_gateway_rest_api.api
