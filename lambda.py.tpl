@@ -8,7 +8,6 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
-    print(event)
     logger.info("Event: User Name [{}], Server ID: [{}]".format(event["username"], event["serverId"]))
 
     response = {}
