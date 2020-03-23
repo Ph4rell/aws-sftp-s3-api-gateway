@@ -116,7 +116,9 @@ resource "aws_api_gateway_method_response" "response_200" {
     "application/json" = "Model"
   }
 
-
+  depends_on = [
+    aws_api_gateway_model.model
+  ]
 }
 
 ###################
