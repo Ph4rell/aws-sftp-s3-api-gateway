@@ -5,6 +5,7 @@ resource "aws_lambda_function" "lambda" {
   handler           = "lambda.lambda_handler"
   runtime           = "python3.6"
   source_code_hash  = filebase64sha256("lambda.zip")
+  timeout           = 15
 }
 
 resource "aws_lambda_permission" "lambda_permission" {
@@ -12,7 +13,7 @@ resource "aws_lambda_permission" "lambda_permission" {
   action        = "lambda:InvokeFunction"
   function_name = var.lambda_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = aws_api_gateway_rest_api.api.execution_arn
+  source_arn    = "${aws_api_gateway_rest_api.api.execution_arn}/*/*/*"
 
   depends_on = [
     aws_lambda_function.lambda
@@ -45,10 +46,10 @@ resource "aws_iam_role_policy_attachment" "ManagedPolicy_attachment" {
   policy_arn  = data.aws_iam_policy.ManagedPolicy.arn
 }
 
-resource "aws_cloudwatch_log_group" "LAMBDA-log-group" {
-  name = var.lambda_name
-}
-resource "aws_cloudwatch_log_stream" "LAMBDA-log-stream" {
-  name           = "LAMBDA-log-stream"
-  log_group_name = aws_cloudwatch_log_group.LAMBDA-log-group.name
-}
+# resource "aws_cloudwatch_log_group" "LAMBDA-log-group" {
+#   name = var.lambda_name
+# }
+# resource "aws_cloudwatch_log_stream" "LAMBDA-log-stream" {
+#   name           = "LAMBDA-log-stream"
+#   log_group_name = aws_cloudwatch_log_group.LAMBDA-log-group.name
+# }
