@@ -128,6 +128,7 @@ data "aws_iam_policy_document" "TransferSFTPS3Access_document" {
     sid     = "CloudWatchLogs"
     actions = [
       "logs:PutLogEvents",
+      "logs:DescribeLogStreams",
       "logs:CreateLogGroup",
       "logs:CreateLogStream"
     ]
