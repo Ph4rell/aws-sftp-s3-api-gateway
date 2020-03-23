@@ -5,14 +5,9 @@ resource "aws_api_gateway_rest_api" "api" {
   }
 }
 
-resource "aws_cloudwatch_log_group" "API-log-group" {
-  name = var.api_name
-}
-resource "aws_cloudwatch_log_stream" "API-log-stream" {
-  name           = "API-log-stream"
-  log_group_name = aws_cloudwatch_log_group.API-log-group.name
-}
-
+###################
+# API DEPLOYMENT
+##################
 resource "aws_api_gateway_deployment" "deploy" {
   rest_api_id = aws_api_gateway_rest_api.api.id
 
@@ -26,7 +21,9 @@ resource "aws_api_gateway_deployment" "deploy" {
   }
 
 }
-
+###################
+# API STAGE
+##################
 resource "aws_api_gateway_stage" "stage" {
   stage_name    = "prod"
   rest_api_id   = aws_api_gateway_rest_api.api.id
@@ -87,13 +84,13 @@ resource "aws_api_gateway_integration" "integration" {
 
   request_templates = {
     "application/json" = <<EOF
-    {
-      "username": "$input.params('username')",
-      "password": "$util.escapeJavaScript($input.params('Password')).replaceAll("\\'","'")",
-      "serverId": "$input.params('serverId')"
-    }
-    EOF
-  }
+{
+  "username": "$input.params('username')",
+  "password": "$util.escapeJavaScript($input.params('Password')).replaceAll("\\'","'")",
+  "serverId": "$input.params('serverId')"
+}
+EOF
+}
 }
 
 #########################
@@ -114,6 +111,45 @@ resource "aws_api_gateway_method_response" "response_200" {
   resource_id = aws_api_gateway_resource.config.id
   http_method = aws_api_gateway_method.get_method.http_method
   status_code = "200"
+
+  response_models = {
+    "application/json" = "Model"
+  }
+
+
 }
 
+###################
+# API MODEL
+##################
+resource "aws_api_gateway_model" "model" {
+  rest_api_id  = aws_api_gateway_rest_api.api.id
+  name         = "Model"
+  description  = "a JSON schema"
+  content_type = "application/json"
 
+  schema = <<EOF
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "UserUserConfig",
+  "type": "object",
+  "properties": {
+    "Role": {
+      "type": "string"
+    },
+    "Policy": {
+      "type": "string"
+    },
+    "HomeDirectory": {
+      "type": "string"
+    },
+    "PublicKeys": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
+EOF
+}
