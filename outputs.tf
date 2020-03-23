@@ -9,3 +9,7 @@ output "stage_execute_arn" {
 output "sftp_server_id" {
     value = aws_transfer_server.server.id
 }
+
+output "sftp_server_endpoint" {
+    value = aws_transfer_server.server.endpoint
+}
