@@ -45,11 +45,3 @@ resource "aws_iam_role_policy_attachment" "ManagedPolicy_attachment" {
   role        = aws_iam_role.lambda_role.id
   policy_arn  = data.aws_iam_policy.ManagedPolicy.arn
 }
-
-# resource "aws_cloudwatch_log_group" "LAMBDA-log-group" {
-#   name = var.lambda_name
-# }
-# resource "aws_cloudwatch_log_stream" "LAMBDA-log-stream" {
-#   name           = "LAMBDA-log-stream"
-#   log_group_name = aws_cloudwatch_log_group.LAMBDA-log-group.name
-# }

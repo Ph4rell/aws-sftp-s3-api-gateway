@@ -9,12 +9,3 @@ resource "aws_transfer_server" "server" {
     aws_api_gateway_rest_api.api
   ]
 }
-
-resource "aws_cloudwatch_log_group" "SFTP-log-group" {
-  name = "SFTP-Server"
-}
-
-resource "aws_cloudwatch_log_stream" "SFTP-log-stream" {
-  name           = "SFTP-log-stream"
-  log_group_name = aws_cloudwatch_log_group.SFTP-log-group.name
-}
