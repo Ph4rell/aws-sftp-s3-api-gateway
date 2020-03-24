@@ -123,6 +123,43 @@ data "aws_iam_policy_document" "TransferSFTPS3Access_document" {
       "${aws_s3_bucket.bucket.arn}"
     ]
   }
+}
+#########################################
+# SFTP Cloudwatch Role
+#########################################
+resource "aws_iam_role" "SFTPLogsRole" {
+  name 		            = "SFTPLogsRole"
+  description         = "SFTPLogsRole"
+  assume_role_policy  = data.aws_iam_policy_document.SFTPLogs_assume_role_policy.json
+}
+
+data "aws_iam_policy_document" "SFTPLogs_assume_role_policy" {
+  statement {
+    sid     = "AssumeRole"
+    actions = [
+      "sts:AssumeRole"
+    ]
+    principals {
+      type        = "Service"
+      identifiers = [
+        "transfer.amazonaws.com"
+      ]
+    }
+  }
+}
+
+resource "aws_iam_policy" "SFTPLogs_policy" {
+  name    = "SFTPLogs_policy"
+  policy  = data.aws_iam_policy_document.SFTPLogs_document.json
+}
+
+resource "aws_iam_role_policy_attachment" "SFTPLogs_attachment" {
+  policy_arn  = aws_iam_policy.SFTPLogs_policy.arn
+  role        = aws_iam_role.SFTPLogsRole.id
+}
+
+data "aws_iam_policy_document" "SFTPLogs_document" {
+  version = "2012-10-17"
 
   statement {
     sid     = "CloudWatchLogs"
