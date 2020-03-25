@@ -40,7 +40,7 @@ data "aws_iam_policy_document" "user_document" {
     ]
     effect = "Allow"
     resources = [
-      "${aws_s3_bucket.bucket.arn}/&{aws:username}/*"
+      "${aws_s3_bucket.bucket.arn}/$${aws:username}"
     ]
   }
   statement {
@@ -51,7 +51,7 @@ data "aws_iam_policy_document" "user_document" {
     ]
     effect = "Allow"
     resources = [
-      "${aws_s3_bucket.bucket.arn}/&{aws:username}"
+      "${aws_s3_bucket.bucket.arn}/$${aws:username}"
     ]
   }
 }
