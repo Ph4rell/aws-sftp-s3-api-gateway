@@ -29,16 +29,29 @@ data "aws_iam_policy_document" "user_document" {
   statement {
     sid     = "userPolicy"
     actions = [
-      "s3:DeleteObject",
-      "s3:PutObject",
-      "s3:GetObject",
-      "s3:DeleteObjectVersion",
-      "s3:GetObjectVersion"
+      "*"
+      # "s3:DeleteObject",
+      # "s3:PutObject",
+      # "s3:GetObject",
+      # "s3:DeleteObjectVersion",
+      # "s3:GetObjectVersion",
+      # "s3:GetObjectACL",
+      # "s3:PutObjectACL"
     ]
     effect = "Allow"
     resources = [
-      "${aws_s3_bucket.bucket.arn}/&{aws:username}",
       "${aws_s3_bucket.bucket.arn}/&{aws:username}/*"
+    ]
+  }
+  statement {
+    sid     = "ListBucketPolicy"
+    actions = [
+      "s3:ListBucket",
+      "s3:GetBucketLocation"
+    ]
+    effect = "Allow"
+    resources = [
+      "${aws_s3_bucket.bucket.arn}/&{aws:username}"
     ]
   }
 }

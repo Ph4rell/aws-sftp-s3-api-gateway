@@ -30,7 +30,7 @@ def lambda_handler(event, context):
         response["Role"] = "${transfer_role_arn}"
         response["HomeDirectory"] = "/" + home_directory
         # Optional JSON blob to further restrict this user's permissions
-        response["Policy"] = ${user_policy}
+        response["Policy"] = json.dumps(${user_policy})
         logger.info("Message: {}".format(response))
     else:
         logger.info("Failed to authenticate user [{}] with Okta. Received status code of {}".format(get_full_username(username), status_code))
