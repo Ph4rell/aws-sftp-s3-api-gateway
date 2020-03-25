@@ -27,20 +27,20 @@ data "archive_file" "zip" {
 data "aws_iam_policy_document" "user_document" {
   version = "2012-10-17"
   statement {
-    sid     = "userPolicy"
+    sid     = "UserPolicy"
     actions = [
-      "*"
-      # "s3:DeleteObject",
-      # "s3:PutObject",
-      # "s3:GetObject",
-      # "s3:DeleteObjectVersion",
-      # "s3:GetObjectVersion",
-      # "s3:GetObjectACL",
-      # "s3:PutObjectACL"
+      "s3:DeleteObject",
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:DeleteObjectVersion",
+      "s3:GetObjectVersion",
+      "s3:GetObjectACL",
+      "s3:PutObjectACL"
     ]
     effect = "Allow"
     resources = [
-      "${aws_s3_bucket.bucket.arn}/$${aws:username}"
+      "${aws_s3_bucket.bucket.arn}/$${transfer:UserName}/*",
+      "${aws_s3_bucket.bucket.arn}/$${transfer:UserName}"
     ]
   }
   statement {
@@ -51,7 +51,7 @@ data "aws_iam_policy_document" "user_document" {
     ]
     effect = "Allow"
     resources = [
-      "${aws_s3_bucket.bucket.arn}/$${aws:username}"
+      "${aws_s3_bucket.bucket.arn}"
     ]
   }
 }
